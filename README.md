@@ -1,6 +1,8 @@
-# ⚡ Edwards Equipment Management System
+# ⚡ Edwards Pump Manager
 
-Edwards Vacuum 공식 장비 관리 시스템입니다. EST에서 받은 펌프 정보를 체계적으로 관리하고 리포트를 생성합니다.
+Edwards EST 데이터를 활용한 펌프 정보 관리 도구입니다. EST에서 받은 펌프 정보를 체계적으로 관리하고 리포트를 생성합니다.
+
+> ⚠️ 이 프로젝트는 개인 프로젝트이며, Edwards Vacuum의 공식 제품이 아닙니다.
 
 ## 🚀 주요 기능
 
