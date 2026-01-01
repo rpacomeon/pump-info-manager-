@@ -1,0 +1,136 @@
+{
+  "generatedAt": "2026-01-01T07:00:00Z",
+  "equipment": [
+    {
+      "name": "SDG",
+      "ipAddress": "10.0.0.10",
+      "applications": [
+        {
+          "applicationName": "Edwards.CoreService",
+          "versionInformation": [
+            {
+              "name": "Edwards.CoreService",
+              "version": "0.0.1-demo"
+            }
+          ]
+        },
+        {
+          "applicationName": "Edwards.Authentication",
+          "versionInformation": [
+            {
+              "name": "Edwards.Authentication",
+              "version": "0.0.1-demo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "S1 Pump",
+      "ipAddress": "10.0.0.61",
+      "applications": [
+        {
+          "applicationName": "S1 Pump",
+          "versionInformation": [
+            {
+              "name": "Pump Type",
+              "version": "EUV-XXX"
+            },
+            {
+              "name": "Controller Software",
+              "version": "D00000000_X"
+            },
+            {
+              "name": "Pump Node Module",
+              "version": "255500000"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "S1B Pump",
+      "ipAddress": "10.0.0.62",
+      "applications": [
+        {
+          "applicationName": "S1B Pump",
+          "versionInformation": [
+            {
+              "name": "Booster Size",
+              "version": "XX"
+            },
+            {
+              "name": "Controller Software",
+              "version": "D00000000_M"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ToolType",
+      "ipAddress": "10.0.0.200",
+      "applications": [
+        {
+          "applicationName": "ToolType",
+          "versionInformation": [
+            {
+              "name": "System Name",
+              "version": "DEMO-TOOL"
+            },
+            {
+              "name": "Location",
+              "version": "DEMO-LINE"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "User Interface",
+      "ipAddress": "10.0.0.5",
+      "applications": [
+        {
+          "applicationName": "hmi-client",
+          "versionInformation": [
+            {
+              "name": "Software version",
+              "version": "2026.01.01-demo"
+            }
+          ]
+        },
+        {
+          "applicationName": "hmi-server",
+          "versionInformation": [
+            {
+              "name": "Software version",
+              "version": "2026.01.01-demo"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "summaryVersionInformation": [
+    {
+      "applicationName": "Edwards.CoreService",
+      "name": "Edwards.CoreService",
+      "version": "0.0.1-demo"
+    },
+    {
+      "applicationName": "Edwards.Authentication",
+      "name": "Edwards.Authentication",
+      "version": "0.0.1-demo"
+    },
+    {
+      "applicationName": "hmi-client",
+      "name": "Software version",
+      "version": "2026.01.01-demo"
+    },
+    {
+      "applicationName": "hmi-server",
+      "name": "Software version",
+      "version": "2026.01.01-demo"
+    }
+  ]
+}
