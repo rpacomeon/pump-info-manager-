@@ -232,29 +232,79 @@ def parse_with_ip_merge(uploaded_files):
             # 파일 전체의 공통 정보 추출
             global_pool = extract_all_kv(raw)
             
-            # 개별 항목(행) 후보 리스트 찾기
-            items = []
-            for key in ['slices', 'summaryVersionInformation', 'equipments', 'applications', 'pumps', 'devices']:
-                if key in raw and isinstance(raw[key], list):
-                    items = raw[key]
-                    break
+            # equipment 배열 처리 (새로운 형식: equipment -> applications -> versionInformation)
+            if 'equipment' in raw and isinstance(raw['equipment'], list):
+                for equipment in raw['equipment']:
+                    equip_ip = equipment.get('ipAddress', '-')
+                    equip_name = equipment.get('name', '-')
+                    
+                    # applications 배열 처리
+                    if 'applications' in equipment and isinstance(equipment['applications'], list):
+                        for app in equipment['applications']:
+                            app_name = app.get('applicationName', '-')
+                            
+                            # versionInformation 배열 처리
+                            if 'versionInformation' in app and isinstance(app['versionInformation'], list):
+                                for version_info in app['versionInformation']:
+                                    version_name = version_info.get('name', '-')
+                                    version_value = version_info.get('version', '-')
+                                    
+                                    row = {
+                                        "Source_File": file_name,
+                                        "IP": equip_ip,
+                                        "장비명": equip_name,
+                                        "applicationName": app_name,
+                                        "name": version_name,
+                                        "Version": version_value
+                                    }
+                                    
+                                    # 각 표준 컬럼별로 값 채우기
+                                    for std_name, candidates in COLUMN_MAPPER.items():
+                                        if std_name in ["IP", "장비명", "Version"]:
+                                            continue
+                                        
+                                        # 특수 처리: name 필드가 표준 컬럼명과 일치하는 경우
+                                        if std_name == "Pump Type" and version_name == "Pump Type":
+                                            row[std_name] = version_value
+                                        elif std_name == "Pump Node Module" and version_name == "Pump Node Module":
+                                            row[std_name] = version_value
+                                        elif std_name == "보고명" and version_name:
+                                            row[std_name] = version_name
+                                        else:
+                                            # 일반 매핑
+                                            for c in candidates:
+                                                val = None
+                                                if c == "applicationName":
+                                                    val = app_name
+                                                elif c == "name":
+                                                    # name 필드가 특정 컬럼과 매칭되는지 확인
+                                                    if std_name == "Pump Type" and version_name == "Pump Type":
+                                                        val = version_value
+                                                    elif std_name == "Pump Node Module" and version_name == "Pump Node Module":
+                                                        val = version_value
+                                                    else:
+                                                        val = version_name
+                                                elif c in version_info:
+                                                    val = version_info.get(c)
+                                                elif c in app:
+                                                    val = app.get(c)
+                                                elif c in equipment:
+                                                    val = equipment.get(c)
+                                                elif c in global_pool:
+                                                    val = global_pool.get(c)
+                                                
+                                                if val:
+                                                    row[std_name] = val
+                                                    break
+                                        
+                                        if std_name not in row:
+                                            row[std_name] = "-"
+                                    
+                                    all_rows.append(row)
             
-            # 리스트가 아니면 단일 객체로 처리
-            if not items:
-                if isinstance(raw, list):
-                    items = raw
-                else:
-                    items = [raw]
-            
-            # summaryVersionInformation의 경우, 펌프 정보만 필터링 (선택사항)
-            # 모든 정보를 포함하려면 이 부분을 주석 처리
-            if 'summaryVersionInformation' in raw and isinstance(raw['summaryVersionInformation'], list):
-                # 펌프만 필터링하려면 아래 주석 해제
-                # items = [item for item in items if 'Pump' in item.get('applicationName', '')]
-                pass
-            
-            # summaryVersionInformation의 경우 각 항목을 개별 행으로 처리
-            if 'summaryVersionInformation' in raw and isinstance(raw['summaryVersionInformation'], list):
+            # summaryVersionInformation 처리 (기존 형식)
+            elif 'summaryVersionInformation' in raw and isinstance(raw['summaryVersionInformation'], list):
+                items = raw['summaryVersionInformation']
                 # 각 항목을 개별 행으로 추가
                 for item in items:
                     item_pool = extract_all_kv(item)
