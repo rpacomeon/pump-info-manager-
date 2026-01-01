@@ -4,7 +4,6 @@ import json
 import yaml
 from datetime import datetime
 from io import BytesIO
-import plotly.express as px
 import os
 import glob
 
