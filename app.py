@@ -253,38 +253,70 @@ def parse_with_ip_merge(uploaded_files):
                 # items = [item for item in items if 'Pump' in item.get('applicationName', '')]
                 pass
             
-            # 파일 내 IP별로 데이터를 임시 저장할 딕셔너리
-            ip_groups = {}
-            
-            for item in items:
-                item_pool = extract_all_kv(item)
-                # 항목 정보와 전역 정보를 합침
-                combined = {**global_pool, **item_pool}
-                
-                # IP 찾기
-                ip = "-"
-                for ip_key in COLUMN_MAPPER["IP"]:
-                    if combined.get(ip_key):
-                        ip = str(combined.get(ip_key))
-                        break
-                
-                # 동일 IP가 있으면 기존 데이터와 병합, 없으면 새로 생성
-                if ip not in ip_groups:
-                    ip_groups[ip] = {"Source_File": file_name, "IP": ip}
-                
-                # 각 표준 컬럼별로 값 채우기
-                for std_name, candidates in COLUMN_MAPPER.items():
-                    if std_name == "IP":
-                        continue
-                    # 기존에 값이 없을 때만 새로 찾아서 채움
-                    if ip_groups[ip].get(std_name) in [None, "-", ""]:
+            # summaryVersionInformation의 경우 각 항목을 개별 행으로 처리
+            if 'summaryVersionInformation' in raw and isinstance(raw['summaryVersionInformation'], list):
+                # 각 항목을 개별 행으로 추가
+                for item in items:
+                    item_pool = extract_all_kv(item)
+                    combined = {**global_pool, **item_pool}
+                    
+                    # IP 찾기
+                    ip = "-"
+                    for ip_key in COLUMN_MAPPER["IP"]:
+                        if combined.get(ip_key):
+                            ip = str(combined.get(ip_key))
+                            break
+                    
+                    # 각 항목을 개별 행으로 추가
+                    row = {"Source_File": file_name, "IP": ip}
+                    
+                    # 각 표준 컬럼별로 값 채우기
+                    for std_name, candidates in COLUMN_MAPPER.items():
+                        if std_name == "IP":
+                            continue
                         for c in candidates:
                             val = combined.get(c)
                             if val:
-                                ip_groups[ip][std_name] = val
+                                row[std_name] = val
                                 break
-            
-            all_rows.extend(list(ip_groups.values()))
+                        # 값이 없으면 "-"로 설정
+                        if std_name not in row:
+                            row[std_name] = "-"
+                    
+                    all_rows.append(row)
+            else:
+                # 기존 로직: IP 기준 통합
+                ip_groups = {}
+                
+                for item in items:
+                    item_pool = extract_all_kv(item)
+                    # 항목 정보와 전역 정보를 합침
+                    combined = {**global_pool, **item_pool}
+                    
+                    # IP 찾기
+                    ip = "-"
+                    for ip_key in COLUMN_MAPPER["IP"]:
+                        if combined.get(ip_key):
+                            ip = str(combined.get(ip_key))
+                            break
+                    
+                    # 동일 IP가 있으면 기존 데이터와 병합, 없으면 새로 생성
+                    if ip not in ip_groups:
+                        ip_groups[ip] = {"Source_File": file_name, "IP": ip}
+                    
+                    # 각 표준 컬럼별로 값 채우기
+                    for std_name, candidates in COLUMN_MAPPER.items():
+                        if std_name == "IP":
+                            continue
+                        # 기존에 값이 없을 때만 새로 찾아서 채움
+                        if ip_groups[ip].get(std_name) in [None, "-", ""]:
+                            for c in candidates:
+                                val = combined.get(c)
+                                if val:
+                                    ip_groups[ip][std_name] = val
+                                    break
+                
+                all_rows.extend(list(ip_groups.values()))
             
         except Exception as e:
             error_files.append(f"{file.name}: {str(e)}")
