@@ -1,0 +1,38 @@
+import streamlit as st
+import os
+import yaml
+
+# [추가] app.py 파일이 있는 실제 경로를 자동으로 찾아냅니다.
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+config_dir = os.path.join(BASE_DIR, "configs")
+
+st.title("📂 경로 진단 도구")
+
+# 현재 프로그램이 바라보는 폴더를 화면에 출력 (확인용)
+st.info(f"현재 툴의 위치: {BASE_DIR}")
+st.info(f"설정 파일을 찾는 위치: {config_dir}")
+
+# 폴더가 없으면 자동으로 만듭니다.
+if not os.path.exists(config_dir):
+    os.makedirs(config_dir)
+    st.warning(f"⚠️ {config_dir} 폴더가 없어서 새로 만들었습니다.")
+
+# 폴더 안의 모든 파일을 출력해봅니다.
+all_files = os.listdir(config_dir)
+st.write("📁 configs 폴더 내 전체 파일 리스트:", all_files)
+
+# 그 중 .yml 또는 .yaml만 골라냅니다.
+config_files = [f for f in all_files if f.endswith(('.yml', '.yaml'))]
+
+if not config_files:
+    st.error("❌ 인식 가능한 .yml 파일이 없습니다! 확장자를 확인해 주세요.")
+    # 만약 리스트에 파일은 있는데 안 뜬다면 확장자 문제일 확률 100%입니다.
+    st.stop()
+
+selected_config_file = st.sidebar.selectbox("1. Tool Type 선택", config_files)
+
+# 이하 기존 로직...
+if selected_config_file:
+    with open(os.path.join(config_dir, selected_config_file), 'r', encoding='utf-8') as f:
+        config = yaml.safe_load(f)
+        st.success(f"✅ {selected_config_file} 로드 성공!")
