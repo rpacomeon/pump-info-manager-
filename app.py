@@ -16,107 +16,67 @@ CONFIGS_DIR = os.path.join(BASE_DIR, "configs")
 if not os.path.exists(CONFIGS_DIR):
     os.makedirs(CONFIGS_DIR)
 
-# --- [Edwards Korea 공식 툴 설정] ---
+# --- [Edwards Korea 디자인 철학 - 간결함] ---
 st.set_page_config(
-    page_title="Edwards Equipment Management System",
+    page_title="장비 정보 관리 시스템",
     page_icon="🔧",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# --- [Edwards Vacuum 공식 브랜딩 스타일] ---
+# --- [간결한 디자인 스타일] ---
 st.markdown("""
     <style>
-    /* Edwards Vacuum 공식 색상 (웹사이트 참고) */
+    /* Edwards Korea 색상 - 간결하고 전문적 */
     :root {
-        --edwards-primary: #1E3A5F;      /* 진한 네이비 블루 */
-        --edwards-secondary: #2C5F8D;     /* 중간 블루 */
-        --edwards-accent: #4A90A4;        /* 청록색 액센트 */
-        --edwards-light: #E8F0F5;         /* 연한 블루 그레이 */
-        --edwards-gray: #6B7280;          /* 중립 회색 */
-        --edwards-dark: #111827;          /* 진한 텍스트 */
+        --primary: #1E3A5F;
+        --secondary: #2C5F8D;
+        --accent: #4A90A4;
+        --light: #F8FAFC;
+        --gray: #6B7280;
     }
     
-    .edwards-header {
-        background: linear-gradient(135deg, #1E3A5F 0%, #2C5F8D 50%, #4A90A4 100%);
+    .simple-header {
+        background: #1E3A5F;
         color: white;
-        padding: 2.5rem 2rem;
-        border-radius: 0;
+        padding: 1.5rem 2rem;
         margin: -1rem -1rem 2rem -1rem;
-        box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
-        border-bottom: 4px solid #4A90A4;
+        border-bottom: 3px solid #4A90A4;
     }
     
-    .edwards-header h1 {
+    .simple-header h1 {
         color: white;
-        font-size: 2.2rem;
-        font-weight: 700;
+        font-size: 1.8rem;
+        font-weight: 600;
         margin: 0;
-        font-family: 'Segoe UI', 'Malgun Gothic', Arial, sans-serif;
-        letter-spacing: -0.5px;
+        font-family: 'Malgun Gothic', 'Segoe UI', Arial, sans-serif;
     }
     
-    .edwards-header p {
-        color: rgba(255,255,255,0.95);
-        font-size: 1rem;
-        margin: 0.8rem 0 0 0;
-        font-weight: 400;
-    }
-    
-    .edwards-badge {
-        display: inline-block;
-        background: rgba(255,255,255,0.25);
-        padding: 0.4rem 1rem;
-        border-radius: 4px;
-        font-size: 0.8rem;
-        margin-top: 1rem;
-        font-weight: 500;
-        border: 1px solid rgba(255,255,255,0.3);
-    }
-    
-    .metric-card {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 6px;
-        border-left: 4px solid #2C5F8D;
-        box-shadow: 0 2px 8px rgba(30, 58, 95, 0.1);
-        transition: transform 0.2s;
-    }
-    
-    .metric-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(30, 58, 95, 0.15);
+    .simple-header p {
+        color: rgba(255,255,255,0.9);
+        font-size: 0.9rem;
+        margin: 0.5rem 0 0 0;
     }
     
     .stDataFrame {
         border: 1px solid #E8F0F5;
-        border-radius: 6px;
-        overflow: hidden;
+        border-radius: 4px;
     }
     
-    /* 버튼 스타일 */
     .stButton > button {
-        background: linear-gradient(135deg, #2C5F8D 0%, #4A90A4 100%);
+        background: #2C5F8D;
         color: white;
         border: none;
-        border-radius: 6px;
+        border-radius: 4px;
         font-weight: 500;
-        transition: all 0.3s;
     }
     
     .stButton > button:hover {
-        background: linear-gradient(135deg, #1E3A5F 0%, #2C5F8D 100%);
-        box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+        background: #1E3A5F;
     }
     
-    /* 사이드바 스타일 */
-    .css-1d391kg {
-        background-color: #F8FAFC;
-    }
-    
-    /* 메인 컨텐츠 배경 */
     .main .block-container {
-        background-color: #FFFFFF;
+        padding-top: 2rem;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -437,38 +397,13 @@ def analyze_pump_data(df):
     
     return result
 
-# --- [엑셀 리포트 생성] ---
-def generate_excel_report(df, analysis_data):
-    """Edwards 표준 형식의 엑셀 리포트 생성"""
+# --- [엑셀 리포트 생성] --- (간소화)
+def generate_excel_report(df):
+    """간결한 엑셀 리포트 생성"""
     output = BytesIO()
     
     with pd.ExcelWriter(output, engine='openpyxl') as writer:
-        # 요약 시트
-        summary_data = {
-            '항목': ['총 레코드 수', '고유 IP 수', '고유 펌프 수', '생성 일시'],
-            '값': [
-                analysis_data.get('total_records', 0),
-                analysis_data.get('unique_ips', 0),
-                analysis_data.get('unique_pumps', 0),
-                datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            ]
-        }
-        summary_df = pd.DataFrame(summary_data)
-        summary_df.to_excel(writer, sheet_name='Summary', index=False)
-        
-        # 펌프별 집계
-        pump_col = None
-        for col in ['장비명', 'Pump Type', 'applicationName']:
-            if col in df.columns:
-                pump_col = col
-                break
-        
-        if pump_col:
-            pump_summary = df.groupby(pump_col).size().reset_index(name='Count')
-            pump_summary.columns = ['Pump Name', 'Count']
-            pump_summary.to_excel(writer, sheet_name='Pump Summary', index=False)
-        
-        # 원본 데이터
+        # 원본 데이터만
         df.to_excel(writer, sheet_name='Equipment Data', index=False)
     
     output.seek(0)
@@ -476,22 +411,19 @@ def generate_excel_report(df, analysis_data):
 
 # --- [메인 대시보드] ---
 def main():
-    # Edwards Vacuum 헤더
+    # 간결한 헤더
     st.markdown("""
-        <div class="edwards-header">
-            <h1>Edwards Equipment Management System</h1>
-            <p>Edwards Vacuum 공식 장비 관리 시스템</p>
-            <span class="edwards-badge">Version 2.0 | 대한민국</span>
+        <div class="simple-header">
+            <h1>장비 정보 관리 시스템</h1>
+            <p>EST 데이터 통합 및 리포트 생성</p>
         </div>
     """, unsafe_allow_html=True)
     
     # 사이드바
     with st.sidebar:
-        # Edwards 로고 영역 (실제 로고 이미지로 교체 가능)
         st.markdown("""
-        <div style='text-align: center; padding: 1rem; background: linear-gradient(135deg, #1E3A5F 0%, #2C5F8D 100%); border-radius: 8px; margin-bottom: 1rem;'>
-            <h3 style='color: white; margin: 0; font-size: 1.3rem;'>Edwards Vacuum</h3>
-            <p style='color: rgba(255,255,255,0.9); margin: 0.3rem 0 0 0; font-size: 0.85rem;'>Equipment Management</p>
+        <div style='text-align: center; padding: 1rem; background: #1E3A5F; border-radius: 6px; margin-bottom: 1rem;'>
+            <h3 style='color: white; margin: 0; font-size: 1.2rem;'>장비 정보 관리</h3>
         </div>
         """, unsafe_allow_html=True)
         st.markdown("---")
@@ -516,8 +448,7 @@ def main():
         """)
         
         st.markdown("---")
-        st.caption("© 2024 Edwards Vacuum. All rights reserved.")
-        st.caption("Edwards Vacuum은 Atlas Copco Group의 일원입니다.")
+        st.caption("개인 프로젝트 | Edwards Korea 스타일")
     
     # 파일 업로드 - 탭으로 구분
     tab1, tab2, tab3 = st.tabs(["📤 파일 업로드", "📁 configs 폴더", "🔍 경로 진단"])
@@ -603,124 +534,46 @@ def main():
         if not df.empty:
             st.success(f"✅ {len(uploaded_files)}개 파일에서 {len(df)}개 레코드를 성공적으로 통합했습니다.")
             
-            # 데이터 분석
-            analysis_data = analyze_pump_data(df)
-            
-            # 상단 요약 메트릭
             st.markdown("---")
-            st.subheader("📊 시스템 요약")
+            st.subheader("📋 장비 리스트")
             
-            col1, col2, col3, col4 = st.columns(4)
+            # 필터링 옵션 (IP + 장비명)
+            col1, col2 = st.columns(2)
+            
+            filtered_df = df.copy()
             
             with col1:
-                if "System Serial Number" in df.columns:
-                    serial = df["System Serial Number"].iloc[0] if df["System Serial Number"].iloc[0] != "-" else "N/A"
-                    st.metric("System Serial Number", serial)
-                else:
-                    st.metric("System Serial Number", "N/A")
+                if "IP" in df.columns:
+                    unique_ips = ['전체'] + sorted([ip for ip in df['IP'].unique() if ip != "-"])
+                    selected_ip = st.selectbox("IP 주소로 필터링", unique_ips)
+                    
+                    if selected_ip != '전체':
+                        filtered_df = filtered_df[filtered_df['IP'] == selected_ip].copy()
             
             with col2:
-                if "LineTag" in df.columns:
-                    tag = df["LineTag"].iloc[0] if df["LineTag"].iloc[0] != "-" else "N/A"
-                    st.metric("Line Tag", tag)
-                else:
-                    st.metric("Line Tag", "N/A")
-            
-            with col3:
                 if "장비명" in df.columns:
-                    equipment = df["장비명"].iloc[0] if df["장비명"].iloc[0] != "-" else "N/A"
-                    st.metric("장비명", equipment)
-                else:
-                    st.metric("장비명", "N/A")
+                    unique_equipments = ['전체'] + sorted([eq for eq in df['장비명'].unique() if eq != "-"])
+                    selected_equipment = st.selectbox("장비명으로 필터링", unique_equipments)
+                    
+                    if selected_equipment != '전체':
+                        filtered_df = filtered_df[filtered_df['장비명'] == selected_equipment].copy()
             
-            with col4:
-                if "IP" in df.columns:
-                    ip = df["IP"].iloc[0] if df["IP"].iloc[0] != "-" else "N/A"
-                    st.metric("IP Address", ip)
-                else:
-                    st.metric("IP Address", "N/A")
-            
-            # ToolType 정보 표시 (장비 툴타입)
-            if analysis_data and analysis_data.get('tooltype_info'):
-                st.markdown("---")
-                st.subheader("🔧 장비 ToolType 정보")
-                tooltype_info = analysis_data['tooltype_info']
-                
-                col1, col2 = st.columns(2)
-                for idx, (name, value) in enumerate(tooltype_info.items()):
-                    with col1 if idx % 2 == 0 else col2:
-                        st.markdown(f"""
-                        <div style='background: #F8FAFC; padding: 1rem; border-radius: 6px; border-left: 4px solid #2C5F8D; margin-bottom: 0.5rem;'>
-                            <strong style='color: #1E3A5F;'>{name}</strong><br>
-                            <span style='color: #6B7280; font-size: 1.1rem;'>{value}</span>
-                        </div>
-                        """, unsafe_allow_html=True)
-            
-            st.markdown("---")
-            st.subheader("📋 장비 리스트 (IP 기준 통합)")
-            
-            # 필터링 옵션
-            if "IP" in df.columns:
-                unique_ips = ['전체'] + sorted([ip for ip in df['IP'].unique() if ip != "-"])
-                selected_ip = st.selectbox("IP 주소로 필터링", unique_ips)
-                
-                if selected_ip != '전체':
-                    filtered_df = df[df['IP'] == selected_ip].copy()
-                else:
-                    filtered_df = df.copy()
-            else:
-                filtered_df = df.copy()
-                selected_ip = '전체'
-            
-            # 데이터 테이블
+            # 데이터 테이블 (편집 가능)
             display_cols = [col for col in list(COLUMN_MAPPER.keys()) + ["Source_File"] if col in filtered_df.columns]
-            st.dataframe(
+            
+            # 행 편집 기능 (st.data_editor 사용)
+            edited_df = st.data_editor(
                 filtered_df[display_cols],
                 use_container_width=True,
                 hide_index=True,
-                height=400
+                height=400,
+                num_rows="dynamic",  # 행 추가/삭제 가능
+                column_config={
+                    "IP": st.column_config.TextColumn("IP 주소", width="medium"),
+                    "장비명": st.column_config.TextColumn("장비명", width="medium"),
+                    "Version": st.column_config.TextColumn("버전", width="medium"),
+                }
             )
-            
-            # 펌프별 통계
-            if analysis_data and analysis_data.get('pump_breakdown'):
-                st.markdown("---")
-                st.subheader("📈 펌프별 통계")
-                
-                pump_df = pd.DataFrame({
-                    '펌프명': list(analysis_data['pump_breakdown'].keys()),
-                    '수량': list(analysis_data['pump_breakdown'].values())
-                })
-                
-                col1, col2 = st.columns(2)
-                with col1:
-                    fig_pie = px.pie(pump_df, values='수량', names='펌프명', 
-                                   title='펌프별 분포',
-                                   color_discrete_sequence=px.colors.qualitative.Set3)
-                    st.plotly_chart(fig_pie, use_container_width=True)
-                
-                with col2:
-                    fig_bar = px.bar(pump_df, x='펌프명', y='수량', 
-                                   title='펌프별 수량',
-                                   color='수량',
-                                   color_continuous_scale='Blues')
-                    st.plotly_chart(fig_bar, use_container_width=True)
-            
-            # 펌프 필터링 옵션 추가
-            if 'applicationName' in df.columns:
-                # 펌프만 필터링
-                pump_mask = df['applicationName'].astype(str).str.contains('Pump', case=False, na=False)
-                pump_df_filtered = df[pump_mask] if pump_mask.any() else pd.DataFrame()
-                
-                if not pump_df_filtered.empty:
-                    st.markdown("---")
-                    st.subheader("🔍 펌프 정보 상세 보기")
-                    
-                    unique_pumps = ['전체'] + sorted(pump_df_filtered['applicationName'].unique().tolist())
-                    selected_pump_detail = st.selectbox("펌프 선택 (상세 정보)", unique_pumps)
-                    
-                    if selected_pump_detail != '전체':
-                        pump_detail_df = pump_df_filtered[pump_df_filtered['applicationName'] == selected_pump_detail]
-                        st.dataframe(pump_detail_df, use_container_width=True, hide_index=True)
             
             # 리포트 다운로드
             st.markdown("---")
@@ -729,24 +582,27 @@ def main():
             col1, col2 = st.columns(2)
             
             with col1:
-                # CSV 다운로드
-                csv = filtered_df.to_csv(index=False).encode('utf-8-sig')
+                # CSV 다운로드 (편집된 데이터)
+                csv = edited_df.to_csv(index=False).encode('utf-8-sig')
                 st.download_button(
                     "📄 CSV 리포트 다운로드",
                     data=csv,
-                    file_name=f"Edwards_Equipment_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                    file_name=f"Equipment_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
                     mime="text/csv",
                     use_container_width=True
                 )
             
             with col2:
-                # Excel 다운로드
-                excel_buffer = generate_excel_report(filtered_df, analysis_data)
+                # Excel 다운로드 (편집된 데이터)
+                output = BytesIO()
+                with pd.ExcelWriter(output, engine='openpyxl') as writer:
+                    edited_df.to_excel(writer, sheet_name='Equipment Data', index=False)
+                output.seek(0)
                 st.download_button(
                     "📊 Excel 리포트 다운로드",
-                    data=excel_buffer.getvalue(),
-                    file_name=f"Edwards_Equipment_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
-                    mime="application/vnd.openpyxl-officedocument.spreadsheetml.sheet",
+                    data=output.getvalue(),
+                    file_name=f"Equipment_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     use_container_width=True
                 )
         else:
