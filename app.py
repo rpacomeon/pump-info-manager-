@@ -8,6 +8,14 @@ import plotly.express as px
 import os
 import glob
 
+# --- [경로 자동 찾기] ---
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIGS_DIR = os.path.join(BASE_DIR, "configs")
+
+# configs 폴더가 없으면 자동 생성
+if not os.path.exists(CONFIGS_DIR):
+    os.makedirs(CONFIGS_DIR)
+
 # --- [Edwards Korea 공식 툴 설정] ---
 st.set_page_config(
     page_title="Edwards Equipment Management System",
@@ -151,6 +159,24 @@ def extract_all_kv(obj, pool=None):
     
     return pool
 
+# --- [경로 자동 찾기] ---
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIGS_DIR = os.path.join(BASE_DIR, "configs")
+
+# configs 폴더가 없으면 자동 생성
+if not os.path.exists(CONFIGS_DIR):
+    os.makedirs(CONFIGS_DIR)
+
+# --- [configs 폴더 스캔] ---
+def scan_configs_folder():
+    """configs 폴더에서 YAML/JSON 파일 스캔"""
+    config_files = []
+    if os.path.exists(CONFIGS_DIR):
+        all_files = os.listdir(CONFIGS_DIR)
+        config_files = [f for f in all_files if f.endswith(('.yml', '.yaml', '.json'))]
+        config_files.sort()
+    return config_files
+
 # --- [파일 형식 자동 감지 및 파싱] ---
 def detect_and_parse(file_content, file_name):
     """파일 형식을 자동 감지하여 JSON 또는 YAML로 파싱"""
@@ -174,6 +200,15 @@ def detect_and_parse(file_content, file_name):
     except Exception as e:
         st.error(f"파일 '{file_name}' 파싱 실패: {str(e)}")
         return None, None
+
+def scan_configs_folder():
+    """configs 폴더에서 YAML/JSON 파일 스캔"""
+    config_files = []
+    if os.path.exists(CONFIGS_DIR):
+        all_files = os.listdir(CONFIGS_DIR)
+        config_files = [f for f in all_files if f.endswith(('.yml', '.yaml', '.json'))]
+        config_files.sort()
+    return config_files
 
 # --- [IP 기준 데이터 통합 함수] ---
 def parse_with_ip_merge(uploaded_files):
@@ -402,14 +437,82 @@ def main():
         st.caption("© 2024 Edwards Vacuum. All rights reserved.")
         st.caption("Edwards Vacuum은 Atlas Copco Group의 일원입니다.")
     
-    # 파일 업로드
-    st.subheader("📤 파일 업로드")
-    uploaded_files = st.file_uploader(
-        "JSON 또는 YAML 파일을 선택하세요 (다중 선택 가능)",
-        type=['json', 'yaml', 'yml'],
-        accept_multiple_files=True,
-        help="Edwards EST에서 내보낸 장비 정보 파일"
-    )
+    # 파일 업로드 - 탭으로 구분
+    tab1, tab2, tab3 = st.tabs(["📤 파일 업로드", "📁 configs 폴더", "🔍 경로 진단"])
+    
+    uploaded_files = None
+    
+    with tab1:
+        st.subheader("📤 파일 업로드")
+        uploaded_files = st.file_uploader(
+            "JSON 또는 YAML 파일을 선택하세요 (다중 선택 가능)",
+            type=['json', 'yaml', 'yml'],
+            accept_multiple_files=True,
+            help="Edwards EST에서 내보낸 장비 정보 파일"
+        )
+    
+    with tab2:
+        st.subheader("📁 configs 폴더에서 불러오기")
+        st.info(f"📂 configs 폴더 위치: `{CONFIGS_DIR}`")
+        
+        config_files = scan_configs_folder()
+        
+        if config_files:
+            st.success(f"✅ {len(config_files)}개의 설정 파일을 찾았습니다.")
+            selected_config = st.selectbox("설정 파일 선택", config_files)
+            
+            if st.button("📊 파일 불러오기", type="primary"):
+                config_path = os.path.join(CONFIGS_DIR, selected_config)
+                try:
+                    with open(config_path, 'r', encoding='utf-8') as f:
+                        if selected_config.endswith(('.yml', '.yaml')):
+                            data = yaml.safe_load(f)
+                        else:
+                            data = json.load(f)
+                    
+                    # 파일 객체처럼 만들기 (기존 로직과 호환)
+                    class FileWrapper:
+                        def __init__(self, name, data):
+                            self.name = name
+                            self.data = data
+                            self._content = None
+                        
+                        def seek(self, pos):
+                            pass
+                        
+                        def read(self):
+                            if self._content is None:
+                                if isinstance(self.data, dict):
+                                    self._content = json.dumps(self.data, ensure_ascii=False).encode('utf-8')
+                                else:
+                                    self._content = str(self.data).encode('utf-8')
+                            return self._content
+                    
+                    uploaded_files = [FileWrapper(selected_config, data)]
+                    st.success(f"✅ {selected_config} 로드 성공!")
+                    st.rerun()  # 페이지 새로고침하여 데이터 표시
+                except Exception as e:
+                    st.error(f"❌ 파일 읽기 오류: {str(e)}")
+        else:
+            st.warning(f"⚠️ configs 폴더에 YAML/JSON 파일이 없습니다.")
+            st.info(f"💡 `{CONFIGS_DIR}` 폴더에 파일을 넣어주세요.")
+    
+    with tab3:
+        st.subheader("🔍 경로 진단 도구")
+        st.info(f"현재 툴의 위치: `{BASE_DIR}`")
+        st.info(f"configs 폴더 위치: `{CONFIGS_DIR}`")
+        
+        if os.path.exists(CONFIGS_DIR):
+            all_files = os.listdir(CONFIGS_DIR)
+            st.write(f"📁 configs 폴더 내 전체 파일: {all_files}")
+            
+            config_files = [f for f in all_files if f.endswith(('.yml', '.yaml', '.json'))]
+            if config_files:
+                st.success(f"✅ 인식 가능한 파일: {config_files}")
+            else:
+                st.error("❌ 인식 가능한 .yml/.yaml/.json 파일이 없습니다!")
+        else:
+            st.warning(f"⚠️ {CONFIGS_DIR} 폴더가 없어서 새로 만들었습니다.")
     
     if uploaded_files:
         with st.spinner("파일을 분석하고 IP 기준으로 통합 중입니다..."):
