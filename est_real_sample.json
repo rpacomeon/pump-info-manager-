@@ -1,0 +1,253 @@
+{
+  "name": "Summary",
+  "ipAddress": "192.168.2.1",
+  "applications": [],
+  "summaryVersionInformation": [
+    {
+      "applicationName": "Edwards.Authentication",
+      "name": "Edwards.Authentication",
+      "version": "2025.12.11.3"
+    },
+    {
+      "applicationName": "Edwards.CoreService",
+      "name": "Edwards.CoreService",
+      "version": "2025.12.5.2"
+    },
+    {
+      "applicationName": "Edwards.CustomerInterfaces.EdCentraGateway",
+      "name": "Edwards.CustomerInterfaces.EdCentraGateway",
+      "version": "2025.12.11.4"
+    },
+    {
+      "applicationName": "Edwards.CustomerInterfaces.Modbus",
+      "name": "Edwards.CustomerInterfaces.Modbus",
+      "version": "2025.12.8.2"
+    },
+    {
+      "applicationName": "Edwards.CustomerInterfaces.SecsGem",
+      "name": "Edwards.CustomerInterfaces.SecsGem",
+      "version": "2025.12.10.5"
+    },
+    {
+      "applicationName": "Edwards.CustomerInterfaces.UiClientGateway",
+      "name": "Edwards.CustomerInterfaces.UiClientGateway",
+      "version": "2025.12.4.8"
+    },
+    {
+      "applicationName": "Edwards.DataLoggers.Alert",
+      "name": "Edwards.DataLoggers.Alert",
+      "version": "2025.11.10.3"
+    },
+    {
+      "applicationName": "Edwards.DataLoggers.AuditTrail",
+      "name": "Edwards.DataLoggers.AuditTrail",
+      "version": "2025.12.10.3"
+    },
+    {
+      "applicationName": "Edwards.DataLoggers.EquipmentStatus",
+      "name": "Edwards.DataLoggers.EquipmentStatus",
+      "version": "2025.11.10.3"
+    },
+    {
+      "applicationName": "Edwards.DataLoggers.Event",
+      "name": "Edwards.DataLoggers.Event",
+      "version": "2025.11.11.3"
+    },
+    {
+      "applicationName": "Edwards.DataLoggers.Parameter",
+      "name": "Edwards.DataLoggers.Parameter",
+      "version": "2025.12.11.2"
+    },
+    {
+      "applicationName": "Edwards.DataLoggers.SerialNumber",
+      "name": "Edwards.DataLoggers.SerialNumber",
+      "version": "2025.11.10.3"
+    },
+    {
+      "applicationName": "Edwards.FeedEngines.HardwareMonitor",
+      "name": "Edwards.FeedEngines.HardwareMonitor",
+      "version": "2025.11.18.2"
+    },
+    {
+      "applicationName": "Edwards.FeedEngines.Modbus",
+      "name": "Edwards.FeedEngines.Modbus",
+      "version": "2025.11.18.1"
+    },
+    {
+      "applicationName": "Edwards.FeedEngines.Plf",
+      "name": "Edwards.FeedEngines.Plf",
+      "version": "2025.12.11.2"
+    },
+    {
+      "applicationName": "Edwards.FeedEngines.ToolType",
+      "name": "Edwards.FeedEngines.ToolType",
+      "version": "2025.11.18.1"
+    },
+    {
+      "applicationName": "Edwards.FeedEngines.Udp",
+      "name": "Edwards.FeedEngines.Udp",
+      "version": "2025.11.18.2"
+    },
+    {
+      "applicationName": "Edwards.NetworkApi",
+      "name": "Edwards.NetworkApi",
+      "version": "2025.11.18.2"
+    },
+    {
+      "applicationName": "Edwards.PurgeManager",
+      "name": "Edwards.PurgeManager",
+      "version": "2025.12.10.2"
+    },
+    {
+      "applicationName": "Edwards.ServiceManager",
+      "name": "Edwards.ServiceManager",
+      "version": "2025.11.18.2"
+    },
+    {
+      "applicationName": "Edwards.UpgradeService",
+      "name": "Edwards.UpgradeService",
+      "version": "2025.11.18.2"
+    },
+    {
+      "applicationName": "EXP1 Pump",
+      "name": "Pump Node - User Tag",
+      "version": "D37486834_V5"
+    },
+    {
+      "applicationName": "EXP1 Pump",
+      "name": "Pump Node Module",
+      "version": "255558785"
+    },
+    {
+      "applicationName": "EXP2 Pump",
+      "name": "Pump Node - User Tag",
+      "version": "D37486834_V5"
+    },
+    {
+      "applicationName": "EXP2 Pump",
+      "name": "Pump Node Module",
+      "version": "255558793"
+    },
+    {
+      "applicationName": "RB1 Pump",
+      "name": "Pump Node - User Tag",
+      "version": "D37342172_01"
+    },
+    {
+      "applicationName": "RB1 Pump",
+      "name": "Pump Node Module",
+      "version": "D37527000"
+    },
+    {
+      "applicationName": "RB1B Pump",
+      "name": "Pump Node - User Tag",
+      "version": "D37342172_01"
+    },
+    {
+      "applicationName": "RB1B Pump",
+      "name": "Pump Node Module",
+      "version": "D37527000"
+    },
+    {
+      "applicationName": "RS1 Pump",
+      "name": "Pump Node - User Tag",
+      "version": "D37342172_01"
+    },
+    {
+      "applicationName": "RS1 Pump",
+      "name": "Pump Node Module",
+      "version": "D37527000"
+    },
+    {
+      "applicationName": "RS1B Pump",
+      "name": "Pump Node - User Tag",
+      "version": "D37342172_01"
+    },
+    {
+      "applicationName": "RS1B Pump",
+      "name": "Pump Node Module",
+      "version": ""
+    },
+    {
+      "applicationName": "S1 Pump",
+      "name": "Pump Node - User Tag",
+      "version": "D37486997_V3_NSC"
+    },
+    {
+      "applicationName": "S1 Pump",
+      "name": "Pump Node Module",
+      "version": "255546495"
+    },
+    {
+      "applicationName": "S2 Pump",
+      "name": "Pump Node - User Tag",
+      "version": "D37486997_V3_NSC"
+    },
+    {
+      "applicationName": "S2 Pump",
+      "name": "Pump Node Module",
+      "version": "255552167"
+    },
+    {
+      "applicationName": "S3 Pump",
+      "name": "Pump Node - User Tag",
+      "version": "D37486997_V3_NSC"
+    },
+    {
+      "applicationName": "S3 Pump",
+      "name": "Pump Node Module",
+      "version": "255554354"
+    },
+    {
+      "applicationName": "S4 Pump",
+      "name": "Pump Node - User Tag",
+      "version": "D37486997_V3_NSC"
+    },
+    {
+      "applicationName": "S4 Pump",
+      "name": "Pump Node Module",
+      "version": "255547493"
+    },
+    {
+      "applicationName": "S5 Pump",
+      "name": "Pump Node - User Tag",
+      "version": "D37486997_V3_NSC"
+    },
+    {
+      "applicationName": "S5 Pump",
+      "name": "Pump Node Module",
+      "version": "255558259"
+    },
+    {
+      "applicationName": "S6 Pump",
+      "name": "Pump Node - User Tag",
+      "version": "D37486997_V3_NSC"
+    },
+    {
+      "applicationName": "S6 Pump",
+      "name": "Pump Node Module",
+      "version": "255551225"
+    },
+    {
+      "applicationName": "S7 Pump",
+      "name": "Pump Node - User Tag",
+      "version": "D37486997_V3_NSC"
+    },
+    {
+      "applicationName": "S7 Pump",
+      "name": "Pump Node Module",
+      "version": "255551259"
+    },
+    {
+      "applicationName": "ToolType",
+      "name": "Location",
+      "version": "EUVZenith"
+    },
+    {
+      "applicationName": "ToolType",
+      "name": "System Name",
+      "version": "VIZEON"
+    }
+  ]
+}
+
